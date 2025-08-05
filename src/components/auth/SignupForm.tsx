@@ -1,13 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-export default function SignupForm() {
+export const SignupForm = () => {
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleGoogle = async () => {
     await signIn("google");
@@ -17,9 +20,28 @@ export default function SignupForm() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    // You can implement your own signup logic here, or use credentials signIn if you want
-    setLoading(false);
-    setError("Sign up with email is not implemented. Please use Google.");
+    try {
+      // Call API route to create user
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Signup failed");
+      // Auto-login after signup
+      const loginRes = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+      });
+      if (loginRes?.error) throw new Error("Signup succeeded but login failed");
+      router.push("/books");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
