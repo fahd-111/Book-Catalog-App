@@ -1,0 +1,57 @@
+"use client";
+import React, { useState } from "react";
+
+interface BookFormProps {
+  onSubmit: (data: { title: string; author: string; genre: string }) => void;
+  loading?: boolean;
+}
+
+export default function BookForm({ onSubmit, loading }: BookFormProps) {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [genre, setGenre] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title || !author || !genre) {
+      setError("All fields are required");
+      return;
+    }
+    setError("");
+    onSubmit({ title, author, genre });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="flex text-gray-900 flex-col gap-4">
+      <input
+        name="title"
+        placeholder="Title"
+        className="border p-2 rounded"
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+        required
+      />
+      <input
+        name="author"
+        placeholder="Author"
+        className="border p-2 rounded"
+        value={author}
+        onChange={e => setAuthor(e.target.value)}
+        required
+      />
+      <input
+        name="genre"
+        placeholder="Genre"
+        className="border p-2 rounded"
+        value={genre}
+        onChange={e => setGenre(e.target.value)}
+        required
+      />
+      {error && <div className="text-red-500 text-sm">{error}</div>}
+      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded" disabled={loading}>
+        {loading ? "Adding..." : "Add Book"}
+      </button>
+    </form>
+  );
+}
