@@ -62,6 +62,8 @@ export const authOptions: NextAuthOptions = {
             data: {
               email: user.email,
               name: user.name || "",
+            //   default password for all
+              password: "123",
               googleId: account.providerAccountId,
             },
           });
