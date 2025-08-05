@@ -3,18 +3,29 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BookWithUser } from "@/types";
 
-export default function BookViewPage({ params }: { params: { id: string } }) {
+export default function BookViewPage({ params }: { params: Promise<{ id: string }> }) {
   const [book, setBook] = useState<BookWithUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [bookId, setBookId] = useState<string>("");
 
   useEffect(() => {
-    fetchBook();
-  }, [params.id]);
+    const getParams = async () => {
+      const resolvedParams = await params;
+      setBookId(resolvedParams.id);
+    };
+    getParams();
+  }, [params]);
+
+  useEffect(() => {
+    if (bookId) {
+      fetchBook();
+    }
+  }, [bookId]);
 
   const fetchBook = async () => {
     try {
-      const response = await fetch(`/api/books/${params.id}`);
+      const response = await fetch(`/api/books/${bookId}`);
       if (!response.ok) {
         if (response.status === 404) {
           throw new Error("Book not found");
