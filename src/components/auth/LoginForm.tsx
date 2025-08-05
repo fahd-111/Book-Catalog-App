@@ -4,13 +4,15 @@ import { signIn } from "next-auth/react";
 
 
 
-export default function LoginForm({ onGoogle }: { onGoogle?: () => void }) {
+export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-
+  const handleGoogle = async () => {
+    await signIn("google");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +31,7 @@ export default function LoginForm({ onGoogle }: { onGoogle?: () => void }) {
   return (
     <form className="space-y-4 text-gray-900" onSubmit={handleSubmit}>
       <h2 className="text-2xl font-bold mb-2">Login</h2>
-      <button type="button" onClick={onGoogle} className="flex items-center justify-center w-full border border-gray-300 rounded-lg py-2 mb-2 bg-white hover:bg-gray-50 transition">
+      <button type="button" onClick={handleGoogle} className="flex items-center justify-center w-full border border-gray-300 rounded-lg py-2 mb-2 bg-white hover:bg-gray-50 transition">
         <img src="/google.svg" alt="Google" className="w-5 h-5 mr-2" />
         Continue with Google
       </button>

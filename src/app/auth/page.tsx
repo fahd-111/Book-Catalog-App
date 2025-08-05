@@ -6,10 +6,7 @@ import SignupForm from "@/components/auth/SignupForm";
 export default function AuthPage() {
   const [mode, setMode] = useState<"login" | "signup">("login");
 
-  const handleGoogle = () => {
-    // TODO: Add Google sign-in logic
-    alert("Continue with Google clicked");
-  };
+
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -47,9 +44,9 @@ export default function AuthPage() {
           </div>
           <div className="mt-2">
             {mode === "login" ? (
-              <LoginForm onGoogle={handleGoogle} />
+              <LoginForm  />
             ) : (
-              <SignupForm onGoogle={handleGoogle} />
+              <SignupForm />
             )}
           </div>
         </div>
