@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { SignupFormData } from "@/types";
 
 export async function GET() {
   return new Response("Signup route is working", { status: 200 });
@@ -9,7 +8,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
     try {
-        const { name, email, password }: SignupFormData = await req.json();
+        const { name, email, password } = await req.json();
         if (!email || !password) {
             return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
         }

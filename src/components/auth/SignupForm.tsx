@@ -2,12 +2,14 @@
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { SignupFormData } from "@/types";
 
 export const SignupForm = () => {
-
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState<SignupFormData>({
+    name: "",
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -25,15 +27,15 @@ export const SignupForm = () => {
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify(formData),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Signup failed");
       // Auto-login after signup
       const loginRes = await signIn("credentials", {
         redirect: false,
-        email,
-        password,
+        email: formData.email,
+        password: formData.password,
       });
       if (loginRes?.error) throw new Error("Signup succeeded but login failed");
       router.push("/books");
@@ -42,6 +44,10 @@ export const SignupForm = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleInputChange = (field: keyof SignupFormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -62,8 +68,8 @@ export const SignupForm = () => {
         type="text"
         placeholder="Enter your name"
         className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        value={name}
-        onChange={e => setName(e.target.value)}
+        value={formData.name}
+        onChange={e => handleInputChange("name", e.target.value)}
         required
       />
       <label className="block text-sm font-medium">Email</label>
@@ -71,8 +77,8 @@ export const SignupForm = () => {
         type="email"
         placeholder="Enter your email"
         className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
+        value={formData.email}
+        onChange={e => handleInputChange("email", e.target.value)}
         required
       />
       <label className="block text-sm font-medium">Password</label>
@@ -80,8 +86,8 @@ export const SignupForm = () => {
         type="password"
         placeholder="Enter your password"
         className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
+        value={formData.password}
+        onChange={e => handleInputChange("password", e.target.value)}
         required
       />
       <button type="submit" className="w-full bg-indigo-700 hover:bg-indigo-800 text-white p-2 rounded-lg font-semibold transition" disabled={loading}>

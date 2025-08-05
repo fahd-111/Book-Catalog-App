@@ -1,8 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import { BookFormData } from "@/types";
 
 interface BookFormProps {
-  onSubmit: (data: { title: string; author: string; genre: string }) => void;
+  onSubmit: (data: BookFormData) => void;
   loading?: boolean;
 }
 

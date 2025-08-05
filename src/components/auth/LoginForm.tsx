@@ -1,12 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { signIn } from "next-auth/react";
-
-
+import { LoginFormData } from "@/types";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState<LoginFormData>({
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -20,12 +21,16 @@ export default function LoginForm() {
     setError("");
     const res = await signIn("credentials", {
       redirect: false,
-      email,
-      password,
+      email: formData.email,
+      password: formData.password,
     });
     setLoading(false);
     if (res?.error) setError("Invalid email or password");
     // else: NextAuth will handle redirect if needed
+  };
+
+  const handleInputChange = (field: keyof LoginFormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -46,8 +51,8 @@ export default function LoginForm() {
         type="email"
         placeholder="Enter your email"
         className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
+        value={formData.email}
+        onChange={e => handleInputChange("email", e.target.value)}
         required
       />
       <label className="block text-sm font-medium">Password</label>
@@ -55,8 +60,8 @@ export default function LoginForm() {
         type="password"
         placeholder="Enter your password"
         className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
+        value={formData.password}
+        onChange={e => handleInputChange("password", e.target.value)}
         required
       />
       <button type="submit" className="w-full bg-indigo-700 hover:bg-indigo-800 text-white p-2 rounded-lg font-semibold transition" disabled={loading}>
