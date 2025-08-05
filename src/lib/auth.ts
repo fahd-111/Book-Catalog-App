@@ -51,31 +51,30 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      if (account && account.provider === "google") {
+      if (account?.provider === "google" && user.email) {
         const existingUser = await prisma.user.findUnique({
           where: { email: user.email },
         });
+        
         if (!existingUser) {
           // Create a new user with Google details
           await prisma.user.create({
             data: {
               email: user.email,
-              name: user.name || profile?.name,
-              googleId: account?.providerAccountId,
+              name: user.name || "",
+              googleId: account.providerAccountId,
             },
           });
           return true;
         } else if (!existingUser.googleId) {
           // Link Google account to existing user (e.g., from credentials signup)
-          if (account && account.providerAccountId) {
-            await prisma.user.update({
-              where: { email: user.email },
-              data: { googleId: account.providerAccountId },
-            });
-          }
+          await prisma.user.update({
+            where: { email: user.email },
+            data: { googleId: account.providerAccountId },
+          });
           return true;
-        } else if (account && existingUser.googleId !== account.providerAccountId) {
-
+        } else if (existingUser.googleId !== account.providerAccountId) {
+          // Different Google account trying to use same email
           return false;
         }
         return true;
