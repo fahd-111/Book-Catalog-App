@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import LoginForm from "@/components/auth/LoginForm";
 import { SignupForm } from "@/components/auth/SignupForm";
 
-export default function AuthPage() {
+function AuthContent() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const searchParams = useSearchParams();
@@ -70,7 +70,21 @@ export default function AuthPage() {
           </div>
         </div>
       </div>
-    
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#f7f9fb]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <AuthContent />
+    </Suspense>
   );
 }
