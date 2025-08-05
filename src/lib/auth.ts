@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async signIn({ user, account, profile }) {
-            if (account?.provider === "google") {
+            if (account?.provider === "google" && user.email) {
                 const existingUser = await prisma.user.findUnique({
                     where: { email: user.email },
                 });
@@ -59,7 +59,7 @@ export const authOptions: NextAuthOptions = {
                     await prisma.user.create({
                         data: {
                             email: user.email,
-                            name: user.name,
+                            name: user.name || "",
                             googleId: account.providerAccountId,
                         },
                     });
