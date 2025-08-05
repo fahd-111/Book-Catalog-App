@@ -58,6 +58,7 @@ export const authOptions: NextAuthOptions = {
         
         if (!existingUser) {
           // Create a new user with Google details
+          console.log("account details", account);
           await prisma.user.create({
             data: {
               email: user.email,
