@@ -9,8 +9,13 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "jwt",
+    strategy: "database", // Use database strategy with PrismaAdapter
   },
+  pages: {
+    error: '/auth', // Redirect to your custom auth page on error
+    signIn: '/auth', // Custom sign-in page
+  },
+  debug: true, // Enable debug mode for better error logging
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -51,48 +56,25 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      if (account?.provider === "google" && user.email) {
-        const existingUser = await prisma.user.findUnique({
-          where: { email: user.email },
-        });
-        
-        if (!existingUser) {
-          // Create a new user with Google details
-          console.log("account details", account);
-          await prisma.user.create({
-            data: {
-              email: user.email,
-              name: user.name || "",
-            //   default password for all
-              password: "123",
-              googleId: account.providerAccountId,
-            },
-          });
-          return true;
-        } else if (!existingUser.googleId) {
-          // Link Google account to existing user (e.g., from credentials signup)
-          await prisma.user.update({
-            where: { email: user.email },
-            data: { googleId: account.providerAccountId },
-          });
-          return true;
-        } else if (existingUser.googleId !== account.providerAccountId) {
-          // Different Google account trying to use same email
-          return false;
-        }
-        return true;
-      }
+      console.log("SignIn callback triggered:", { 
+        provider: account?.provider, 
+        email: user.email,
+        userId: user.id 
+      });
+      
+      // Allow all sign-ins - let PrismaAdapter handle user creation
       return true;
     },
     async jwt({ token, user }) {
+      // Only needed for JWT strategy
       if (user) token.id = user.id;
       return token;
     },
-    async session({ session, token }) {
-      if (!session.user) {
-        session.user = { id: "", name: null, email: null, image: null };
+    async session({ session, user }) {
+      // With database strategy, user comes from database
+      if (session.user && user) {
+        session.user.id = user.id;
       }
-      if (token?.id) session.user.id = token.id as string;
       return session;
     },
   },
