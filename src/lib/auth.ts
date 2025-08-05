@@ -60,7 +60,6 @@ export const authOptions: NextAuthOptions = {
                         data: {
                             email: user.email,
                             name: user.name || "",
-                            googleId: account.providerAccountId,
                         },
                     });
                     return true;
