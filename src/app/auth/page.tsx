@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import LoginForm from "@/components/auth/LoginForm";
 import { SignupForm } from "@/components/auth/SignupForm";
 
@@ -8,6 +9,16 @@ function AuthContent() {
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  // Redirect if user is already authenticated
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      const callbackUrl = searchParams.get('callbackUrl') || '/books';
+      router.push(callbackUrl);
+    }
+  }, [session, status, router, searchParams]);
 
   useEffect(() => {
     const error = searchParams.get('error');
@@ -17,17 +28,43 @@ function AuthContent() {
       setErrorMessage("Access was denied. Please try again.");
     } else if (error === 'Configuration') {
       setErrorMessage("There was a configuration error. Please contact support.");
+    } else if (error === 'Callback') {
+      setErrorMessage("There was an error during authentication. Please try again.");
     } else if (error) {
       setErrorMessage("An authentication error occurred. Please try again.");
     }
   }, [searchParams]);
+
+  // Show loading while checking authentication
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f7f9fb]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+          <p className="text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If already authenticated, show redirecting message
+  if (status === "authenticated") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f7f9fb]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-800">Redirecting...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <div className="w-full flex items-start justify-center bg-[#f7f9fb] px-4 py-8">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
           <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-1">Book Catalogue</h1>
-          <p className="text-gray-500 text-center mb-6">Welcome back to your reading journey</p>
+          <p className="text-gray-700 text-center mb-6">Welcome back to your reading journey</p>
           
           {/* Error Message */}
           {errorMessage && (
@@ -49,13 +86,13 @@ function AuthContent() {
               }}
             />
             <button
-              className={`flex-1 py-2 z-10 font-semibold transition-colors duration-300 ${mode === "login" ? "text-gray-900" : "text-gray-400"}`}
+              className={`flex-1 py-2 z-10 font-semibold cursor-pointer transition-colors duration-300 ${mode === "login" ? "text-gray-900" : "text-gray-400"}`}
               onClick={() => setMode("login")}
             >
               Login
             </button>
             <button
-              className={`flex-1 py-2 z-10 font-semibold transition-colors duration-300 ${mode === "signup" ? "text-gray-900" : "text-gray-400"}`}
+              className={`flex-1 py-2 z-10 font-semibold cursor-pointer transition-colors duration-300 ${mode === "signup" ? "text-gray-900" : "text-gray-400"}`}
               onClick={() => setMode("signup")}
             >
               Sign Up
@@ -63,7 +100,7 @@ function AuthContent() {
           </div>
           <div className="mt-2">
             {mode === "login" ? (
-              <LoginForm  />
+              <LoginForm />
             ) : (
               <SignupForm />
             )}
@@ -80,7 +117,7 @@ export default function AuthPage() {
       <div className="min-h-screen flex items-center justify-center bg-[#f7f9fb]">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-900">Loading...</p>
         </div>
       </div>
     }>

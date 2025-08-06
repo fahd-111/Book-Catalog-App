@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     error: '/auth', // Redirect to your custom auth page on error
-    signIn: '/books' // Redirect after successful sign-in
+    signIn: '/auth', // Custom sign-in page
   },
   debug: true, // Enable debug mode for better error logging
   providers: [
@@ -55,6 +55,22 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Redirect to /books after successful sign-in
+      if (url === baseUrl || url === '/') {
+        return `${baseUrl}/books`;
+      }
+      // If it's a relative URL, make it absolute
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`;
+      }
+      // If it's the same origin, allow it
+      if (new URL(url).origin === baseUrl) {
+        return url;
+      }
+      // Otherwise redirect to /books
+      return `${baseUrl}/books`;
+    },
     async signIn({ user, account, profile }) {
       console.log("SignIn callback triggered:", { 
         provider: account?.provider, 
