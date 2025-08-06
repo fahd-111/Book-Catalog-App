@@ -92,7 +92,7 @@ export const SignupForm = () => {
                 onChange={e => handleInputChange("password", e.target.value)}
                 required
             />
-            <button type="submit" className="cursor-pointer w-full bg-blue-700 hover:bg-blue-800 text-white p-2 rounded-lg font-semibold transition" disabled={loading}>
+            <button type="submit" className="cursor-pointer w-full bg-blue-900 hover:bg-blue-700 text-white p-2 rounded-lg font-semibold transition  disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={loading}>
                 {loading ? "Signing Up..." : "Sign Up"}
             </button>
         </form>
