@@ -6,10 +6,10 @@ import { compare } from "bcryptjs";
 import type { NextAuthOptions } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // Remove adapter to avoid conflicts with manual user creation
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "database", // Use database strategy with PrismaAdapter
+    strategy: "jwt", // JWT strategy works well without adapter
   },
   pages: {
     error: '/auth', // Redirect to your custom auth page on error
@@ -62,18 +62,58 @@ export const authOptions: NextAuthOptions = {
         userId: user.id 
       });
       
-      // Allow all sign-ins - let PrismaAdapter handle user creation
+      if (account?.provider === "google" && user.email) {
+        try {
+          // Check if user exists
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email },
+          });
+          
+          if (!existingUser) {
+            // Create new user for Google OAuth
+            console.log("Creating new user for Google OAuth");
+            const newUser = await prisma.user.create({
+              data: {
+                email: user.email,
+                name: user.name || "",
+                googleId: account.providerAccountId,
+              },
+            });
+            console.log("User created:", newUser.id);
+          } else if (!existingUser.googleId) {
+            // Link Google account to existing user
+            console.log("Linking Google account to existing user");
+            await prisma.user.update({
+              where: { email: user.email },
+              data: { googleId: account.providerAccountId },
+            });
+          }
+          return true;
+        } catch (error) {
+          console.error("Error in Google OAuth signIn:", error);
+          return false;
+        }
+      }
+      
+      // Allow all other sign-ins (credentials)
       return true;
     },
-    async jwt({ token, user }) {
-      // Only needed for JWT strategy
-      if (user) token.id = user.id;
+    async jwt({ token, user, account }) {
+      // If this is the first time the user signs in
+      if (account && user?.email) {
+        // Find the user in our database to get the ID
+        const dbUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+        if (dbUser) {
+          token.id = dbUser.id;
+        }
+      }
       return token;
     },
-    async session({ session, user }) {
-      // With database strategy, user comes from database
-      if (session.user && user) {
-        session.user.id = user.id;
+    async session({ session, token }) {
+      if (session.user && token.id) {
+        session.user.id = token.id as string;
       }
       return session;
     },
