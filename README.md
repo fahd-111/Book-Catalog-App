@@ -1,24 +1,61 @@
-# Book Catalog App
+# Book Catalog App - Scaylar Technologies Challenge
 
-A modern, full-stack web application built with Next.js that allows users to create, manage, and discover book collections. Users can sign up, authenticate via Google or email/password, and maintain their personal book libraries while exploring books shared by the community.
+A full-stack web application built with Next.js for the **Scaylar Technologies Associate Software Engineer Challenge**. This application demonstrates proficiency in building scalable applications with user authentication, database integration, and modern web development practices.
 
-## 🚀 Features
+## 📋 Challenge Overview
 
+**Company:** Scaylar Technologies  
+**Position:** Associate Software Engineer  
+**Deadline:** 4-5 days  
+**Objective:** Build a full-stack book catalog app with PostgreSQL and NextAuth.js authentication
+
+### Challenge Requirements Met ✅
+
+- ✅ **Backend API** (Next.js + Prisma)
+- ✅ **Authentication** (NextAuth.js)
+- ✅ **TypeScript Usage**
+- ✅ **Code Structure & Organization**
+- ✅ **UI Design & UX**
+- ✅ **Deployment**
+
+## 🌐 Live Demo
+
+**Visit the live application:** [https://book-catalog-app-new.vercel.app/](https://book-catalog-app-new.vercel.app/)
+
+**GitHub Repository:** [https://github.com/fahd-111/Book-Catalog-App](https://github.com/fahd-111/Book-Catalog-App)
+
+Experience all features including:
+- Google OAuth authentication
+- Email/password registration and login
+- Personal book collection management
+- Community book discovery
+- Responsive design across all devices
+
+## 🚀 Features Implemented
+
+### Core Requirements ✅
 - **User Authentication**: Google OAuth and email/password authentication using NextAuth.js
-- **Personal Book Management**: Add, view, and delete books from your personal collection
+- **Book Management**: Add, view, and delete books from your personal collection
+- **Database Integration**: PostgreSQL (Neon) database with Prisma ORM
+- **Responsive Design**: Mobile-friendly interface optimized for mobile and desktop
+- **Type Safety**: Built with TypeScript throughout the application
+
+### Additional Features 🌟
 - **Community Discovery**: Browse all books shared by the community on the home page
 - **Individual Book Views**: Detailed view pages for each book with author, genre, and publication information
-- **Responsive Design**: Mobile-friendly interface with modern UI components
-- **Type-Safe**: Built with TypeScript and centralized type definitions
-- **Database Integration**: PostgreSQL database with Prisma ORM
+- **Protected Routes**: Automatic redirection for unauthenticated users
+- **Error Handling**: Comprehensive error handling for authentication and API operations
+- **Loading States**: User-friendly loading indicators throughout the app
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack used
 
-- **Frontend**: Next.js 14 (App Router), React, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, NextAuth.js for authentication
-- **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: NextAuth.js with Google Provider and Credentials Provider
-- **Styling**: Tailwind CSS with custom components
+- **Frontend**: Next.js 15 (App Router), React, TypeScript, Tailwind CSS
+- **Backend**: Next.js API Routes
+- **Authentication**: NextAuth.js (Email/Password + Google OAuth)
+- **Database**: PostgreSQL hosted via Neon (Serverless)
+- **ORM**: Prisma
+- **Deployment**: Vercel Platform with automated CI/CD
+- **Styling**: Tailwind CSS with responsive design
 - **Password Hashing**: bcryptjs for secure password storage
 
 ## 📁 Project Structure
@@ -51,14 +88,15 @@ src/
 ### Prerequisites
 
 - Node.js 18+ and npm
-- PostgreSQL database
+- Neon PostgreSQL database (free serverless PostgreSQL)
 - Google OAuth credentials (for Google authentication)
+- Vercel account (for deployment)
 
 ### Environment Setup
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/fahd-111/Book-Catalog-App-.git
 cd book-catalog-app
 ```
 
@@ -69,27 +107,47 @@ npm install
 
 3. Create a `.env` file in the root directory with the following variables:
 ```env
-# Database
-DATABASE_URL="postgresql://username:password@localhost:5432/book_catalog"
+# Database (Neon PostgreSQL)
+DATABASE_URL="postgresql://username:password@host/database?sslmode=require"
 
 # NextAuth.js
-NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_URL="http://localhost:3000"  # Use your production URL for deployment
 NEXTAUTH_SECRET="your-nextauth-secret-key"
 
-# Google OAuth
+# Google OAuth (Get from Google Cloud Console)
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
 ```
 
 ### Database Setup
 
-1. Set up your PostgreSQL database and update the `DATABASE_URL` in your `.env` file
+1. **Create a Neon Database:**
+   - Sign up at [Neon](https://neon.tech/)
+   - Create a new project
+   - Copy the connection string to your `.env` file as `DATABASE_URL`
 
-2. Run Prisma migrations:
+2. **Run Prisma migrations:**
 ```bash
 npx prisma migrate deploy
 npx prisma generate
 ```
+
+3. **Seed the database (optional):**
+```bash
+npx prisma db seed
+```
+
+### Google OAuth Setup
+
+1. **Create Google OAuth Credentials:**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project or select existing one
+   - Enable Google+ API
+   - Go to "Credentials" → "Create Credentials" → "OAuth 2.0 Client ID"
+   - Set authorized redirect URIs:
+     - `http://localhost:3000/api/auth/callback/google` (development)
+     - `https://your-domain.vercel.app/api/auth/callback/google` (production)
+   - Copy Client ID and Client Secret to your `.env` file
 
 ### Development Server
 
@@ -107,37 +165,54 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-## 📱 Application Features
+## 📱 Frontend Pages (App Router)
 
-### Authentication
-- **Google OAuth**: One-click sign-in with Google accounts
-- **Email/Password**: Traditional registration and login system
-- **Session Management**: Secure session handling with NextAuth.js
-- **Protected Routes**: Automatic redirection for unauthenticated users
+### Challenge Requirements Implementation ✅
 
-### Book Management
-- **Add Books**: Create new book entries with title, author, and genre
-- **View Collections**: Browse your personal book collection
-- **Delete Books**: Remove books from your collection
-- **Book Details**: View detailed information about individual books
+#### Home Page (/)
+- ✅ Fetches and displays all books using client-side rendering
+- ✅ Card-based layout with Tailwind CSS styling
+- ✅ Responsive design for mobile and desktop
+- ✅ Shows books from all users in the community
 
-### Community Features
-- **Public Discovery**: Browse books shared by all users on the home page
-- **User Attribution**: See who added each book to the community
-- **Book Sharing**: Your books are automatically shared with the community
+#### Add Book Page (/books/add)
+- ✅ Form with inputs for title, author, and genre
+- ✅ Input validation before submission
+- ✅ Redirects to books page after successful submission
+- ✅ Error handling and user feedback
 
-## 🏗️ API Endpoints
+#### Authentication Pages
+- ✅ **Login/Signup Page (/auth)**: Combined page with toggle between login and signup
+- ✅ **Email/Password Authentication**: Full credentials-based authentication
+- ✅ **Google OAuth**: One-click Google sign-in integration
+- ✅ **User Profile**: Shows user details and logout functionality when logged in
+- ✅ **Protected Routes**: Automatic redirection for unauthenticated users
+
+#### Additional Pages
+- ✅ **My Books (/books)**: Personal book collection management
+- ✅ **Book Details (/books/view/[id])**: Individual book view pages
+- ✅ **Delete Functionality**: Delete buttons on each book entry
+
+### Responsive Design
+- ✅ 70%+ responsive for mobile devices (iPhone, Android)
+- ✅ Optimized desktop views
+- ✅ Tailwind CSS responsive utilities
+- ✅ Touch-friendly interface elements
+
+## 🏗️ API Endpoints (Challenge Requirements)
 
 ### Authentication
 - `POST /api/auth/signup` - Create new user account
 - `GET /api/auth/[...nextauth]` - NextAuth.js authentication handling
 
-### Books
+### Books (Core Challenge Routes)
 - `GET /api/books` - Get authenticated user's books
-- `POST /api/books` - Create a new book (authenticated)
+- `POST /api/books` - Add a new book (authenticated)
+- `DELETE /api/books/[id]` - Delete a book (authenticated, owner only)
+
+### Additional Routes
 - `GET /api/books/all` - Get all books from all users (public)
 - `GET /api/books/[id]` - Get individual book details
-- `DELETE /api/books/[id]` - Delete a book (authenticated, owner only)
 
 ## 🎨 Styling and UI
 
@@ -157,32 +232,111 @@ The application features centralized TypeScript definitions in `src/types/index.
 
 ## 📄 Database Schema
 
-The application uses the following main models:
-- **User**: User accounts with authentication details
-- **Book**: Book entries with title, author, genre, and relationships
-- **Account/Session**: NextAuth.js authentication tables
+The application uses the following main models with Neon PostgreSQL:
+
+### User Model
+```prisma
+model User {
+  id       String   @id @default(cuid())
+  name     String?
+  email    String   @unique
+  googleId String?  @unique
+  password String?  // Only used for CredentialsProvider
+  books    Book[]
+  accounts Account[]
+  sessions Session[]
+}
+```
+
+### Book Model
+```prisma
+model Book {
+  id        String   @id @default(cuid())
+  title     String
+  author    String
+  genre     String
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+```
+
+### NextAuth Models
+- **Account**: OAuth account information
+- **Session**: User session management
+- **VerificationToken**: Email verification tokens
 
 ## 🚀 Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The application is deployed on Vercel with the following setup:
 
-For deployment:
-1. Set up your environment variables in your hosting platform
-2. Configure your PostgreSQL database
-3. Run database migrations in production
-4. Deploy your application
+### Vercel Deployment
 
-Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Connect Repository:**
+   - Import your GitHub repository to Vercel
+   - Vercel will automatically detect it's a Next.js project
 
-## 📚 Learn More
+2. **Environment Variables:**
+   Set the following environment variables in Vercel dashboard:
+   ```env
+   DATABASE_URL=your-neon-postgres-connection-string
+   NEXTAUTH_URL=https://your-app.vercel.app
+   NEXTAUTH_SECRET=your-production-secret
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
+   ```
 
-To learn more about the technologies used:
+3. **Database Migration:**
+   - Vercel will automatically run `npx prisma generate` during build
+   - For migrations, use: `npx prisma migrate deploy`
 
-- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API
-- [NextAuth.js Documentation](https://next-auth.js.org/) - Authentication for Next.js
-- [Prisma Documentation](https://www.prisma.io/docs/) - Database ORM and migrations
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Utility-first CSS framework
+4. **Google OAuth Configuration:**
+   - Update authorized redirect URIs in Google Cloud Console
+   - Add: `https://your-app.vercel.app/api/auth/callback/google`
 
-## 🤝 Contributing
+### Live Application (Challenge Deliverables)
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+- ✅ **Production URL**: [https://book-catalog-app-new.vercel.app/](https://book-catalog-app-new.vercel.app/)
+- ✅ **GitHub Repository**: [https://github.com/fahd-111/Book-Catalog-App](https://github.com/fahd-111/Book-Catalog-App)
+- ✅ **Database**: Neon PostgreSQL (Serverless)
+- ✅ **Authentication**: Google OAuth + Credentials working in production
+- ✅ **Automatic Deployments**: Connected to GitHub for CI/CD
+- ✅ **Environment Variables**: Properly configured in Vercel
+- ✅ **All Features Working**: Authentication, CRUD operations, responsive design
+
+### Build and Deploy Commands
+
+```bash
+# Build the application
+npm run build
+
+# Start production server
+npm start
+
+# Database operations
+npx prisma migrate deploy
+npx prisma generate
+```
+
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+1. **OAuth Errors**: 
+   - Verify Google OAuth credentials and redirect URIs
+   - Check NEXTAUTH_URL matches your domain
+
+2. **Database Connection**:
+   - Ensure Neon database connection string is correct
+   - Verify SSL mode is enabled
+
+3. **Build Errors**:
+   - Run `npx prisma generate` after schema changes
+   - Clear `.next` folder and rebuild
+
+4. **Environment Variables**:
+   - Double-check all required environment variables are set
+   - Ensure production and development URLs are correct
+
+

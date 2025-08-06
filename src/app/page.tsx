@@ -1,13 +1,11 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BookWithUser } from "@/types";
 
 export default function HomePage() {
   const { data: session, status } = useSession();
-  const router = useRouter();
   const [books, setBooks] = useState<BookWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -33,7 +31,14 @@ export default function HomePage() {
   };
 
   if (status === "loading" || loading) {
-    return <div className="text-center py-8">Loading...</div>;
+    return <>
+      <div className="mt-70 flex items-center justify-center bg-[#f7f9fb]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-900">Loading...</p>
+        </div>
+      </div>
+    </>
   }
 
   return (
@@ -42,7 +47,7 @@ export default function HomePage() {
         <h1 className="text-4xl font-bold text-gray-900 mb-6">
           Welcome to Book Catalogue
         </h1>
-        
+
         {!session ? (
           <Link
             href="/auth"
@@ -54,7 +59,7 @@ export default function HomePage() {
           <div className="space-x-4">
             <Link
               href="/books"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg font-semibold text-lg inline-block transition"
+              className="bg-blue-900 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold text-lg inline-block transition"
             >
               My Books
             </Link>
@@ -76,9 +81,9 @@ export default function HomePage() {
 
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-           All Books
+          All Books
         </h2>
-        
+
         {books.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500">No books available yet. Be the first to add one!</p>
@@ -89,7 +94,7 @@ export default function HomePage() {
               <Link
                 key={book.id}
                 href={`/books/view/${book.id}`}
-                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border hover:border-emerald-200"
+                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 border hover:border-blue-200"
               >
                 <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
                   {book.title}
@@ -109,7 +114,7 @@ export default function HomePage() {
           </div>
         )}
       </div>
-      
+
     </div>
   );
 }

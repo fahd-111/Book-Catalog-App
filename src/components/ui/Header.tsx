@@ -12,7 +12,7 @@ export default function Header() {
       </Link>
       <nav className="flex items-center gap-3">
         {status === "loading" ? (
-          <div className="text-gray-500">Loading...</div>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
         ) : session ? (
           <>
             <Link 

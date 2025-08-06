@@ -58,7 +58,14 @@ export default function BooksPage() {
   };
 
   if (status === "loading" || loading) {
-    return <div className="text-center py-8">Loading...</div>;
+    return<>
+    <div className="mt-70 flex items-center justify-center bg-[#f7f9fb]">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-900">Loading...</p>
+      </div>
+    </div>
+    </>
   }
 
   if (!session) {

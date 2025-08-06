@@ -10,8 +10,10 @@ export default function LoginForm() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleGoogle = async () => {
+    setGoogleLoading(true);
     await signIn("google");
   };
 
@@ -38,7 +40,7 @@ export default function LoginForm() {
       <h2 className="text-2xl font-bold mb-2">Login</h2>
       <button type="button" onClick={handleGoogle} className="flex items-center justify-center w-full border border-gray-300 rounded-lg py-2 mb-2 bg-white hover:bg-gray-50 cursor-pointer transition">
         <img src="/google.svg" alt="Google" className="w-5 h-5 mr-2" />
-        Continue with Google
+        {googleLoading ? <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div> : "Continue with Google"}
       </button>
       <div className="flex items-center my-2">
         <div className="flex-1 h-px bg-gray-200" />
