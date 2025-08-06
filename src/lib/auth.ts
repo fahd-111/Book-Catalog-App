@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     error: '/auth', // Redirect to your custom auth page on error
-    signIn: '/auth', // Custom sign-in page
+    signIn: '/books' // Redirect after successful sign-in
   },
   debug: true, // Enable debug mode for better error logging
   providers: [
