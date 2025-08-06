@@ -28,7 +28,7 @@ export default function BookForm({ onSubmit, loading }: BookFormProps) {
       <input
         name="title"
         placeholder="Title"
-        className="border p-2 rounded"
+        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={title}
         onChange={e => setTitle(e.target.value)}
         required
@@ -36,7 +36,7 @@ export default function BookForm({ onSubmit, loading }: BookFormProps) {
       <input
         name="author"
         placeholder="Author"
-        className="border p-2 rounded"
+        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={author}
         onChange={e => setAuthor(e.target.value)}
         required
@@ -44,7 +44,7 @@ export default function BookForm({ onSubmit, loading }: BookFormProps) {
       <input
         name="genre"
         placeholder="Genre"
-        className="border p-2 rounded"
+        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={genre}
         onChange={e => setGenre(e.target.value)}
         required

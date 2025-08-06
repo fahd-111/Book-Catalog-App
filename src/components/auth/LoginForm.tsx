@@ -52,7 +52,7 @@ export default function LoginForm() {
       <input
         type="email"
         placeholder="Enter your email"
-        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={formData.email}
         onChange={e => handleInputChange("email", e.target.value)}
         required
@@ -61,12 +61,12 @@ export default function LoginForm() {
       <input
         type="password"
         placeholder="Enter your password"
-        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         value={formData.password}
         onChange={e => handleInputChange("password", e.target.value)}
         required
       />
-      <button type="submit" className="w-full bg-indigo-700 hover:bg-indigo-800 text-white p-2 rounded-lg font-semibold transition" disabled={loading}>
+      <button type="submit" className="cursor-pointer w-full bg-blue-700 hover:bg-blue-800 text-white p-2 rounded-lg font-semibold transition" disabled={loading}>
         {loading ? "Signing In..." : "Sign In"}
       </button>
     </form>
